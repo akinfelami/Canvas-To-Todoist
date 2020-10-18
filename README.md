@@ -5,11 +5,10 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
-- [Contributing](../CONTRIBUTING.md)
 
 ## About <a name = "about"></a>
 
-A Python script to export Canvas assignments to projects in Todoist based off of selected classes.
+A Python script to export Canvas assignments to projects in Todoist.
 
 ## Getting Started <a name = "getting_started"></a>
 ### Prerequisites
