@@ -3,7 +3,22 @@ import os
 import json
 from todoist.api import TodoistAPI
 import datetime as time
+import sys
 
+# Will update date if a different date is found on a Canvas assignment compared to what is on that Todoist task.
+UPDATE_DUE_DATE = True
+
+# Will NOT create a Todoist task if the Canvas assignment is past due and was NOT submitted.
+PAST_DUE = True
+
+# Print Task/Project messages in console.
+PRINT_MESSAGE = True
+
+def printMessage(print):
+    if print:
+        sys.stdout = sys.__stdout__
+    else:
+        sys.stdout = open(os.devnull, 'w')
 
 def loadKeys():
     try:
@@ -64,24 +79,25 @@ def createTasks(assignmentList, todoistAPI, projectList):
             found = False
             for task in todoistAPI.projects.get_data(projectList[course])['items']:
                 if assignment[0].strip() == task['content'].strip():
-                    if assignment[1] != None and assignment[1] != task['due']['date']:
+                    if assignment[1] != None and assignment[1] != task['due']['date'] and UPDATE_DUE_DATE:
                         print("Newer date found on",
                               assignment[0], "Updating date")
                         todoistAPI.items.update(
                             task['id'], due={'string': assignment[1], 'date': assignment[1]})
                     found = True
             if not found:
-                if assignment[1] != None and assignment[1] < time.datetime.isoformat(time.datetime.now()):
+                if assignment[1] != None and assignment[1] < time.datetime.isoformat(time.datetime.now()) and PAST_DUE:
                     print(
                         assignment[0], "is past due and not submitted. Not adding task")
                 else:
                     print("Could not find task",
-                          assignment[0], "adding new task")
+                          assignment[0], "adding new task to project", course)
                     todoistAPI.items.add(assignment[0].strip(), due={
                                          "date": assignment[1]}, project_id=projectList[course])
     todoistAPI.commit()
 
 
 if __name__ == "__main__":
+    printMessage(PRINT_MESSAGE)
     apiKeys = loadKeys()
     pullSources(apiKeys)
