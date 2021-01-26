@@ -14,6 +14,13 @@ PAST_DUE = True
 # Print Task/Project messages in console.
 PRINT_MESSAGE = True
 
+class Class:
+    def __init__(self, courseName, courseID, projID = "0"):
+        self.name = courseName
+        self.id = courseID
+        self.projectID = projID
+        self.assignments = []
+
 def printMessage(print):
     if print:
         sys.stdout = sys.__stdout__
@@ -28,56 +35,71 @@ def loadKeys():
     except:
         print("Could not find API key file. Please run import_classes.py first or make sure keys.txt is in the root directory.")
 
+# Update keys file with project IDs
+def updateCourses(courses):
+    with open("keys.txt", "r") as file:
+        keys = json.load(file)
+    
+    courseList =  keys['Courses']
+    for course in courses:
+        courseList[course.id] = [course.name, course.projectID]
+
+    with open("keys.txt", "w") as file:
+        json.dump(keys, file)
+
+
+
 
 def pullSources(keys):
     canvasAPI = keys['Canvas']
     todoistAPI = keys['Todoist']
-    assignmentList = {}
+    courseList = []
     projectList = {}
 
     header = {"Authorization": "Bearer " + canvasAPI}
     parameter = {'per_page': 9999, 'include': 'submission'}
     for ID, course in keys['Courses'].items():
-        assignments = requests.get("https://canvas.instructure.com/api/v1/courses/" +
-                                   ID+"/assignments", headers=header, params=parameter).json()
-        for assignment in assignments:
-            if not assignment['submission']['submitted_at']:
-                if course not in assignmentList:
-                    assignmentList[course] = [
-                        [assignment['name'], assignment['due_at']]]
-                else:
-                    assignmentList[course].append(
-                        [assignment['name'], assignment['due_at']])
-
+        try:
+            assignments = requests.get("https://canvas.instructure.com/api/v1/courses/" + ID+"/assignments", headers=header, params=parameter).json()
+            newCourse = Class(course[0], str(ID), str(course[1]))
+            for assignment in assignments:
+                if not assignment['submission']['submitted_at']:
+                    newCourse.assignments.append([assignment['name'], assignment['due_at']])
+                    
+            courseList.append(newCourse)
+        except:
+            print(f"Error requesting {course[0]} from Canvas API")
+        
+        
     api = TodoistAPI(todoistAPI)
     api.sync()
-    projectList = createProjects(assignmentList, api)
+    projectList = createProjects(courseList, api)
     api.sync()
-    createTasks(assignmentList, api, projectList)
+    createTasks(api, projectList)
 
 
-def createProjects(assignmentList, todoistAPI):
-    projectList = {}
-    for course in assignmentList:
+def createProjects(courseList, todoistAPI):
+    for course in courseList:      
         for project in todoistAPI.state['projects']:
             found = False
-            if course in project['name']:
-                projectList[course] = project['id']
+            if course.projectID == str(project['id']):
                 found = True
                 break
         if not found:
-            print("Project not found. Adding", course, "as a project")
-            project = todoistAPI.projects.add(course)
-            projectList[course] = project['id']
+            print("Project not found. Adding", course.name, "as a project")
+            todoistAPI.projects.add(course.name)
+            todoistAPI.commit()
+
     todoistAPI.commit()
-    return projectList
+    updateCourses(courseList)
+    return courseList
 
 
-def createTasks(assignmentList, todoistAPI, projectList):
-    for course, assignments in assignmentList.items():
-        for assignment in assignments:
+def createTasks(todoistAPI, projectList):
+    for project in projectList:
+        for assignment in project.assignments:
             found = False
-            for task in todoistAPI.projects.get_data(projectList[course])['items']:
+            for task in todoistAPI.projects.get_data(project.projectID)['items']:
                 if assignment[0].strip() == task['content'].strip():
                     if assignment[1] != None and assignment[1] != task['due']['date'] and UPDATE_DUE_DATE:
                         print("Newer date found on",
@@ -91,12 +113,12 @@ def createTasks(assignmentList, todoistAPI, projectList):
                         assignment[0], "is past due and not submitted. Not adding task")
                 else:
                     print("Could not find task",
-                          assignment[0], "adding new task to project", course)
+                          assignment[0], "adding new task to project", project.name)
                     todoistAPI.items.add(assignment[0].strip(), due={
-                                         "date": assignment[1]}, project_id=projectList[course])
+                                         "date": assignment[1]}, project_id=project.projectID)
     todoistAPI.commit()
 
-
+   
 if __name__ == "__main__":
     printMessage(PRINT_MESSAGE)
     apiKeys = loadKeys()
