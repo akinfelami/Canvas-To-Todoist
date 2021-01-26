@@ -72,7 +72,7 @@ def listCourses(canvasKey):
         try:
             if courseList[userIn-1]:
                 courseIDs[courseList[userIn-1]["id"]
-                          ] = courseList[userIn-1]["name"]
+                          ] = [courseList[userIn-1]["name"], "0"]
         except:
             print("Entry out of range")
         userIn = int(
