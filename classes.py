@@ -4,10 +4,6 @@ import sys
 import json
 from todoist.api import TodoistAPI
 
-canvasCourses = {}
-
-
-
 
 # def loadKeys(reset=False):
 #     if not open("keys.txt", "r"):
@@ -30,60 +26,76 @@ canvasCourses = {}
 #         json.dump(keys, file)
 
 
-def getInfo():
-    canvasKey = ""
-    todoistKey = ""
+class Classes:
 
-    while not canvasKey:
-        usrKey = input("Paste your Canvas API key here: ").strip()
-        check = requests.get("https://canvas.instructure.com/api/v1/courses",
-                             headers={"Authorization": "Bearer "+usrKey})
-        if check.ok:
-            canvasKey = usrKey
-        else:
-            print("Could not make connection. Check API key")
+    canvasCourses = {}
 
-    while not todoistKey:
-        usrKey = input("Paste your Todoist API key here: ").strip()
-        api = TodoistAPI(usrKey)
-        if 'error' not in api.sync():
-            todoistKey = usrKey
-        else:
-            print("Could not make connection. Check API key")
-    courseID = listCourses(canvasKey)
-    return canvasKey, todoistKey, courseID
+    def __init__(self):
+        self.canvasKey = "9713~PyTkUiMzVabmLAerxWckIPQ8uYyK2kytisQ79UP0GRwxwXqsehQoCtHGV0iCctZw"
+        self.todoistKey = "6f61895728ce2c2ab9ea51cc3917a35b913a7e0b"
+        self.courseIDs = {}
+
+    
+    def getCourses(self):
+        return self.courseIDs
+
+    def getCanvasKey(self):
+        return self.canvasKey
+
+    def getTodoistKey(self):
+        return self.todoistKey
 
 
-def listCourses(canvasKey):
-    courseIDs = {}
-   
+    def getInfo(self):
+        while not self.canvasKey:
+            usrKey = input("Paste your Canvas API key here: ").strip()
+            check = requests.get("https://canvas.instructure.com/api/v1/courses",
+                                headers={"Authorization": "Bearer "+usrKey})
+            if check.ok:
+                self.canvasKey = usrKey
+            else:
+                print("Could not make connection. Check API key")
 
-    API_KEY = canvasKey
-    header = {"Authorization": "Bearer " + API_KEY}
-    parameter = {'per_page': 9999}
+        while not self.todoistKey:
+            usrKey = input("Paste your Todoist API key here: ").strip()
+            api = TodoistAPI(usrKey)
+            if 'error' not in api.sync():
+                self.todoistKey = usrKey
+            else:
+                print("Could not make connection. Check API key")
+        courseID = self.listCourses(self.canvasKey)
+        return self.canvasKey, self.todoistKey, courseID
 
-    courseList = requests.get(
-        'https://canvas.instructure.com/api/v1/courses', headers=header, params=parameter).json()
+
+    def listCourses(self, canvasKey):
+        
+    
+
+        API_KEY = self.canvasKey
+        header = {"Authorization": "Bearer " + API_KEY}
+        parameter = {'per_page': 9999}
+
+        courseList = requests.get(
+            'https://canvas.instructure.com/api/v1/courses', headers=header, params=parameter).json()
 
 
-    for index, name in enumerate(courseList):
-        try:
-            print(str(index+1) + ".)", name['name'])
-        except:
-            continue
-    userIn = int(
-        input("Enter number of course you would like to sync (Enter -1 when done): "))
-    while userIn != -1:
-        try:
-            if courseList[userIn-1]:
-                courseIDs[courseList[userIn-1]["id"]
-                          ] = [courseList[userIn-1]["name"], "0"]
-        except:
-            print("Entry out of range")
+        for index, name in enumerate(courseList):
+            try:
+                print(str(index+1) + ".)", name['name'])
+            except:
+                continue
         userIn = int(
             input("Enter number of course you would like to sync (Enter -1 when done): "))
-    print(courseIDs)
-    return courseIDs
+        while userIn != -1:
+            try:
+                if courseList[userIn-1]:
+                    self.courseIDs[courseList[userIn-1]["id"]
+                            ] = [courseList[userIn-1]["name"], "0"]
+            except:
+                print("Entry out of range")
+            userIn = int(
+                input("Enter number of course you would like to sync (Enter -1 when done): "))
+        return self.courseIDs
 
 
 if __name__ == "__main__":
@@ -91,4 +103,6 @@ if __name__ == "__main__":
     #     loadKeys(True)
     # else:
     #     loadKeys()
-    getInfo()
+    a = Classes()
+    a.getInfo()
+    print(a.getCourses())
