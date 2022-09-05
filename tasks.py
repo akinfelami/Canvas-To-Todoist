@@ -27,19 +27,19 @@ def printMessage(print):
     else:
         sys.stdout = open(os.devnull, 'w')
 
-def loadKeys():
-    try:
-        with open("keys.txt", "r") as file:
-            keys = json.load(file)
-        return keys
-    except:
-        print("Could not find API key file. Please run import_classes.py first or make sure keys.txt is in the root directory.")
+# def loadKeys():
+#     try:
+#         with open("keys.txt", "r") as file:
+#             keys = json.load(file)
+#         return keys
+#     except:
+#         print("Could not find API key file. Please run import_classes.py first or make sure keys.txt is in the root directory.")
 
 # Update keys file with project IDs
 def updateCourses(courses):
     with open("keys.txt", "r") as file:
         keys = json.load(file)
-    
+    ß
     courseList =  keys['Courses']
     for course in courses:
         courseList[course.id] = [course.name, course.projectID]
