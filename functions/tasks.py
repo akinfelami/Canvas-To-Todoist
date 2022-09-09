@@ -1,11 +1,10 @@
-from tkinter import E
 import requests
 import os
 import json
 from todoist_api_python.api import TodoistAPI
 import datetime as time
 import sys
-from canvas import Canvas
+from functions.canvas import Canvas
 
 
 
