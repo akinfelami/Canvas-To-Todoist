@@ -2,7 +2,7 @@ import requests
 import os
 import sys
 import json
-from todoist.api import TodoistAPI
+from todoist_api_python.api import TodoistAPI
 
 
 class Canvas:

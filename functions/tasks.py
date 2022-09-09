@@ -1,6 +1,5 @@
 import requests
 import os
-import json
 from todoist_api_python.api import TodoistAPI
 import datetime as time
 import sys

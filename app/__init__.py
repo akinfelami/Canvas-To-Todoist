@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -30,4 +30,4 @@ app.register_blueprint(tasks, url_prefix='/tasks')
 
 @app.route('/')
 def index():
-    return {'status': 'success', 'msg': 'Server is live!'}
+    return render_template('index.html')
