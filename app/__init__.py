@@ -1,16 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from app.routes.users import users
-from app.routes.tasks import tasks
+
 import os
 
 
 
 app =  Flask(__name__)
 
-app.register_blueprint(users, url_prefix='/users')
-app.register_blueprint(tasks, url_prefix='/tasks')
 
 # Databse config
 basedir = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +18,14 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 app.secret_key = os.getenv('somerandomstring')
+
+# Blueprints
+
+from .routes.users import users
+from .routes.tasks import tasks
+
+app.register_blueprint(users, url_prefix='/users')
+app.register_blueprint(tasks, url_prefix='/tasks')
 
 
 @app.route('/')

@@ -3,7 +3,7 @@ from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False, Required=True)
     username = db.Column(db.String(64), index=True)
     firebase_uid = db.Column(db.Integer)
     canvas_key = db.Column(db.String(128), index=True)
@@ -34,6 +34,10 @@ class User(db.Model):
     @property
     def is_correct_todoist_key(self, key):
         return check_password_hash(self.todosit_key, key)
+
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
     
     
 
