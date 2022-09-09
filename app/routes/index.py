@@ -7,4 +7,4 @@ app.secret_key = os.getenv('somerandomstring')
 
 @app.route('/')
 def index():
-    return {'status': 'success', 'msg': 'Welcome to the homepage'}
+    return {'status': 'success', 'msg': 'Server is live!'}
