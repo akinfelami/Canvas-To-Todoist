@@ -5,34 +5,13 @@ import json
 from todoist.api import TodoistAPI
 
 
-# def loadKeys(reset=False):
-#     if not open("keys.txt", "r"):
-#         canvasKey, todoistKey, courseID = getInfo()
-#         keys = {"Canvas": canvasKey,
-#                 "Todoist": todoistKey,
-#                 "Courses": courseID}
-#         with open("keys.txt", "w") as file:
-#             json.dump(keys, file)
-#     if reset:
-#         resetClasses()
-
-
-# def resetClasses():
-#     with open("keys.txt", "r") as file:
-#         keys = json.load(file)
-#     courseID = listCourses(keys["Canvas"])
-#     keys['Courses'] = courseID
-#     with open("keys.txt", "w") as file:
-#         json.dump(keys, file)
-
-
-class Classes:
+class Canvas:
 
     canvasCourses = {}
 
     def __init__(self):
-        self.canvasKey = "9713~PyTkUiMzVabmLAerxWckIPQ8uYyK2kytisQ79UP0GRwxwXqsehQoCtHGV0iCctZw"
-        self.todoistKey = "6f61895728ce2c2ab9ea51cc3917a35b913a7e0b"
+        self.canvasKey = ""
+        self.todoistKey = ""
         self.courseIDs = {}
 
     
@@ -68,8 +47,6 @@ class Classes:
 
 
     def listCourses(self, canvasKey):
-        
-    
 
         API_KEY = self.canvasKey
         header = {"Authorization": "Bearer " + API_KEY}
@@ -101,10 +78,5 @@ class Classes:
 
 
 if __name__ == "__main__":
-    # if sys.argv[-1] == "-r":
-    #     loadKeys(True)
-    # else:
-    #     loadKeys()
-    a = Classes()
+    a = Canvas()
     a.getInfo()
-    print(a.getCourses())
