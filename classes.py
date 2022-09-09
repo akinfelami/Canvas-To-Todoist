@@ -81,6 +81,8 @@ class Classes:
 
         for index, name in enumerate(courseList):
             try:
+                #Todoist has a funny way of handling brackets
+                name['name'] = name['name'].replace('(', '').replace(')', '')
                 print(str(index+1) + ".)", name['name'])
             except:
                 continue
