@@ -13,6 +13,7 @@ class Canvas:
         self.canvasKey = ""
         self.todoistKey = ""
         self.courseIDs = {}
+        self.allcourses = []
 
     
     def getCourses(self):
@@ -25,25 +26,23 @@ class Canvas:
         return self.todoistKey
 
 
-    def getInfo(self):
+    def getInfo(self, canvaskey, todoistkey):
         while not self.canvasKey:
-            usrKey = input("Paste your Canvas API key here: ").strip()
+            print(canvaskey)
+            # usrKey = input("Paste your Canvas API key here: ").strip()
             check = requests.get("https://canvas.instructure.com/api/v1/courses",
-                                headers={"Authorization": "Bearer "+usrKey})
+                                headers={"Authorization": "Bearer "+canvaskey})
             if check.ok:
-                self.canvasKey = usrKey
+                self.canvasKey = canvaskey
             else:
                 print("Could not make connection. Check API key")
 
         while not self.todoistKey:
-            usrKey = input("Paste your Todoist API key here: ").strip()
-            api = TodoistAPI(usrKey)
-            if 'error' not in api.sync():
-                self.todoistKey = usrKey
-            else:
-                print("Could not make connection. Check API key")
-        courseID = self.listCourses(self.canvasKey)
-        return self.canvasKey, self.todoistKey, courseID
+            # usrKey = input("Paste your Todoist API key here: ").strip()
+            api = TodoistAPI(todoistkey)
+            self.todoistKey = todoistkey
+        self.allcourses = self.listCourses(self.canvasKey)
+        return self.allcourses
 
 
     def listCourses(self, canvasKey):
@@ -55,26 +54,35 @@ class Canvas:
         courseList = requests.get(
             'https://canvas.instructure.com/api/v1/courses', headers=header, params=parameter).json()
 
+        courses = []
 
-        for index, name in enumerate(courseList):
-            try:
-                #Todoist has a funny way of handling brackets
-                name['name'] = name['name'].replace('(', '').replace(')', '')
-                print(str(index+1) + ".)", name['name'])
-            except:
-                continue
-        userIn = int(
-            input("Enter number of course you would like to sync (Enter -1 when done): "))
-        while userIn != -1:
-            try:
-                if courseList[userIn-1]:
-                    self.courseIDs[courseList[userIn-1]["id"]
-                            ] = [courseList[userIn-1]["name"], "0"]
-            except:
-                print("Entry out of range")
-            userIn = int(
-                input("Enter number of course you would like to sync (Enter -1 when done): "))
-        return self.courseIDs
+        for course in courseList:
+            courses.append(course['id'])
+
+
+    
+
+        # for index, name in enumerate(courseList):
+        #     courses.append(name['name'])
+            # try:
+            #     #Todoist has a funny way of handling brackets
+            #     name['name'] = name['name'].replace('(', '').replace(')', '')
+            #     print(str(index+1) + ".)", name['name'])
+            # except:
+            #     continue
+
+        # userIn = int(
+        #     input("Enter number of course you would like to sync (Enter -1 when done): "))
+        # while userIn != -1:
+        #     try:
+        #         if courseList[userIn-1]:
+        #             self.courseIDs[courseList[userIn-1]["id"]
+        #                     ] = [courseList[userIn-1]["name"], "0"]
+        #     except:
+        #         print("Entry out of range")
+        #     userIn = int(
+        #         input("Enter number of course you would like to sync (Enter -1 when done): "))
+        return courses
 
 
 if __name__ == "__main__":

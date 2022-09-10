@@ -1,5 +1,5 @@
-import requests
 import os
+import requests
 from todoist_api_python.api import TodoistAPI
 import datetime as time
 import sys
@@ -7,14 +7,7 @@ from functions.canvas import Canvas
 
 
 
-# Will update date if a different date is found on a Canvas assignment compared to what is on that Todoist task.
-UPDATE_DUE_DATE = True
 
-# Will NOT create a Todoist task if the Canvas assignment is past due and was NOT submitted.
-PAST_DUE = True
-
-# Print Task/Project messages in console.
-PRINT_MESSAGE = True
 api = TodoistAPI("6f61895728ce2c2ab9ea51cc3917a35b913a7e0b")
 
 class Class:
@@ -23,14 +16,6 @@ class Class:
         self.id = courseID
         self.projectID = projID
         self.assignments = []
-
-def printMessage(print):
-    if print:
-        sys.stdout = sys.__stdout__
-    else:
-        sys.stdout = open(os.devnull, 'w')
-
-
 
 canvasCourses = Canvas()
 
@@ -42,10 +27,10 @@ def updateCourses(courses):
 
 
 
-def pullSources():
+def pullSources(canvasKey, todoistkey):
 
     
-    canvasCourses.getInfo()
+    allcourses = canvasCourses.getInfo(canvasKey, todoistkey)
     # It is import to call getInfo because initilalizing class canvas intiliazes 
     # both canvas key and todoist keys to an empty string
     canvasAPI = canvasCourses.getCanvasKey()
@@ -74,6 +59,10 @@ def pullSources():
   
     createProjects(courseList, api)
     createTasks(api, courseList)
+
+    print(allcourses)
+
+    return allcourses
 
 
 #---------------------------------------------------------
@@ -130,6 +119,6 @@ def createTasks(todoistAPI, courseList):
    
 
    
-if __name__ == "__main__":
-    a= Class()
-    pullSources()
+# if __name__ == "__main__":
+#     a= Class()
+#     pullSources()

@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 import os
 
 
 
 app =  Flask(__name__)
+CORS(app)
 
 
 # Databse config
