@@ -8,7 +8,7 @@ from functions.canvas import Canvas
 
 
 
-api = TodoistAPI("6f61895728ce2c2ab9ea51cc3917a35b913a7e0b")
+
 
 class Class:
     def __init__(self, courseName="", courseID="", projID = "1234567890"):
@@ -17,7 +17,9 @@ class Class:
         self.projectID = projID
         self.assignments = []
 
+
 canvasCourses = Canvas()
+
 
 def updateCourses(courses):
     courseList =  canvasCourses.getCourses()
@@ -26,16 +28,21 @@ def updateCourses(courses):
 
 
 
-
 def pullSources(canvasKey, todoistkey):
 
-    
-    allcourses = canvasCourses.getInfo(canvasKey, todoistkey)
-    # It is import to call getInfo because initilalizing class canvas intiliazes 
-    # both canvas key and todoist keys to an empty string
+    allcourses = canvasCourses.getInfo(canvasKey, todoistkey)  
+   
+    return allcourses
+
+
+def assignments(canvasKey, todoistkey):
+
+    allcourses = canvasCourses.getInfo(canvasKey, todoistkey) 
+
     canvasAPI = canvasCourses.getCanvasKey()
     todoistAPI = canvasCourses.getTodoistKey()
     courseList = []
+    api = TodoistAPI(canvasCourses.getTodoistKey)
 
     header = {"Authorization": "Bearer " + canvasAPI}
 
@@ -55,19 +62,12 @@ def pullSources(canvasKey, todoistkey):
         except Exception as e:
             print(e)
             print(f"Error requesting {course[0]} from Canvas API")
-        
-  
+
     createProjects(courseList, api)
     createTasks(api, courseList)
 
-    print(allcourses)
-
+    # What? 
     return allcourses
-
-
-#---------------------------------------------------------
-
-# The folllowing are not class methods
 
 
 def createProjects(courseList, todoistAPI):
@@ -85,7 +85,7 @@ def createProjects(courseList, todoistAPI):
             print('Project already exists. Moving on...')  
         else:
             try:
-                new_project = api.add_project(name=course.name)
+                new_project = todoistAPI.add_project(name=course.name)
                 course.projectID = new_project.id
             except Exception as e:
                 print(e)
@@ -105,7 +105,7 @@ def createTasks(todoistAPI, courseList):
             else:
                 print('Adding assignment to task')
                 try:
-                    task = api.add_task(
+                    task = todoistAPI.add_task(
                         content=assignment[0],
                         due_string=assignment[1],
                         due_lang='en',
@@ -116,9 +116,4 @@ def createTasks(todoistAPI, courseList):
                 except Exception as error:
                     print(error)
 
-   
-
-   
-# if __name__ == "__main__":
-#     a= Class()
-#     pullSources()
+        

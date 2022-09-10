@@ -1,60 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas-To-Todoist</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    
-</head>
-<body>
-    <div>
-        <h1 class="text-center pt-5">Canvas-To-Todoist</h1>
-        <p class="text-center">Automatically sync your canvas assigments into Todoist</p>
-    </div>
+{% extends "base.html" %}
 
-    <div class="container mt-5">
-        <p><u>HOW TO USE</u></p>
+{% block content %}
+    <div class="container">
+        <p><u>Steps to use</u></p>
         <ul>
-            <li class="fs-5 fw-bold">Generate a Canvas API key</li>
-            <ul class="lh-lg">
+            <li class="fw-bold text-primary">Generate a Canvas API key</li>
+            <ul>
                 <li>Log into your institutions canvas portal</li>
                 <li>Navigate to Account -> Settings</li>
                 <li>Scroll down to approved Integrations and generate a new access token</li>
                 <li>Copy your access token</li>
             </ul>
-            <li class="fs-5 fw-bold">Generate a Todoist API Key</li>
-            <ul class="lh-lg">
+            <li class="fw-bold text-primary">Generate a Todoist API Key</li>
+            <ul>
                 <li>Log in your Todoist account</li>
                 <li>Go to Settings -> Integrations</li>
                 <li>Copy your API key located at the bottom</li>
             </ul>
         </ul>
-        <p class="text-warning">WARNING: Your API Keys are private and should be kept safely</p>
+        
     </div>
-    
 
-  <div class="container mt-3">
+
+    <div class="container">
+    <p class="text-warning">WARNING: Your API Keys are private and should be kept safely</p>
     <form action="/tasks" method="POST">
         <div class="mb-3">
             <label for="canvas" class="form-label">Canvas Access Token</label>
-            <input type="text" id="canvas" name="canvaskey" class="form-control w-50" aria-describedby="keyhelp"/>
+            <input type="password" id="canvas" name="canvaskey" class="form-control w-50" aria-describedby="keyhelp"/>
             <div id="keyhelp" class="form-text">We'll never store nor share your api keys with anyone else</div>
         </div>
         <div class="mb-3">
             <label for="todo" class="form-label">Todoist API key</label>
-            <input type="text" class="form-control w-50" name="todoistkey" id="todo" aria-describedby="keyhelp"/>
+            <input type="password" class="form-control w-50" name="todoistkey" id="todo" aria-describedby="keyhelp"/>
             <div id="keyhelp" class="form-text">We'll never store nor share your api keys with anyone else</div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Fetch courses</button>
     </form>
-  </div>
+    </div>
 
-    
   
-    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}

@@ -28,7 +28,6 @@ class Canvas:
 
     def getInfo(self, canvaskey, todoistkey):
         while not self.canvasKey:
-            print(canvaskey)
             # usrKey = input("Paste your Canvas API key here: ").strip()
             check = requests.get("https://canvas.instructure.com/api/v1/courses",
                                 headers={"Authorization": "Bearer "+canvaskey})
@@ -53,36 +52,7 @@ class Canvas:
 
         courseList = requests.get(
             'https://canvas.instructure.com/api/v1/courses', headers=header, params=parameter).json()
-
-        courses = []
-
-        for course in courseList:
-            courses.append(course['id'])
-
-
-    
-
-        # for index, name in enumerate(courseList):
-        #     courses.append(name['name'])
-            # try:
-            #     #Todoist has a funny way of handling brackets
-            #     name['name'] = name['name'].replace('(', '').replace(')', '')
-            #     print(str(index+1) + ".)", name['name'])
-            # except:
-            #     continue
-
-        # userIn = int(
-        #     input("Enter number of course you would like to sync (Enter -1 when done): "))
-        # while userIn != -1:
-        #     try:
-        #         if courseList[userIn-1]:
-        #             self.courseIDs[courseList[userIn-1]["id"]
-        #                     ] = [courseList[userIn-1]["name"], "0"]
-        #     except:
-        #         print("Entry out of range")
-        #     userIn = int(
-        #         input("Enter number of course you would like to sync (Enter -1 when done): "))
-        return courses
+        return courseList
 
 
 if __name__ == "__main__":
