@@ -8,8 +8,8 @@
         {% for course in courses %}
 
         <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id={{course}}>
-            <label class="form-check-label" for={{course}}>{{course}}</label>
+            <input type="checkbox" class="form-check-input" id={{course}} name="{{course[0]}}">
+            <label class="form-check-label" for={{course}}>{{course[1]}}</label>
             
           </div>
           {% endfor %}

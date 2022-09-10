@@ -35,27 +35,29 @@ def pullSources(canvasKey, todoistkey):
     return allcourses
 
 
-def assignments(canvasKey, todoistkey):
+def assignments(canvasKey, todoistkey, courselist):
 
-    allcourses = canvasCourses.getInfo(canvasKey, todoistkey) 
-
-    canvasAPI = canvasCourses.getCanvasKey()
-    todoistAPI = canvasCourses.getTodoistKey()
+    canvasAPI = canvasKey
+    todoistAPI = todoistkey
     courseList = []
-    api = TodoistAPI(canvasCourses.getTodoistKey)
+    api = TodoistAPI(todoistAPI)
 
     header = {"Authorization": "Bearer " + canvasAPI}
 
     parameter = {'per_page': 9999, 'include': 'submission'}
-    for ID, course in canvasCourses.getCourses().items():
+    for course in courselist:
         try:
        
-            assignments = requests.get("https://canvas.instructure.com/api/v1/courses/"+str(ID)+"/assignments", 
+            assignments = requests.get("https://canvas.instructure.com/api/v1/courses/"+str(course)+"/assignments", 
             headers=header, params=parameter).json()
-            newCourse = Class(course[0], str(ID), str(course[1]))
-            print(assignments)
+            
+
+            course_details = requests.get("https://canvas.instructure.com/api/v1/courses/"+str(course), 
+            headers=header, params=parameter).json()
+
+            newCourse = Class(course_details.get('name').replace('(', '').replace(')', ''), str(course), str(course))
+
             for assignment in assignments:
-                print(assignment)
                 if not assignment['submission']['submitted_at']:
                     newCourse.assignments.append([assignment['name'], assignment['due_at'], assignment['submission']['submitted_at']])   
             courseList.append(newCourse)
@@ -66,8 +68,9 @@ def assignments(canvasKey, todoistkey):
     createProjects(courseList, api)
     createTasks(api, courseList)
 
+
     # What? 
-    return allcourses
+    return courseList
 
 
 def createProjects(courseList, todoistAPI):

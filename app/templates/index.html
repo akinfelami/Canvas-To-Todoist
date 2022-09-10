@@ -36,8 +36,28 @@
             <div id="keyhelp" class="form-text">We'll never store nor share your api keys with anyone else</div>
         </div>
         <button type="submit" class="btn btn-primary">Fetch courses</button>
+        <div class="spinner-border text-primary" 
+        id="spinner" role="status">
+        
+             </div>
+            <div id="data"></div>
     </form>
     </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type=text/javascript>
+        $(function() {
+          $('#spinner').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/background_process_test',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+</script>
+ 
 
   
 {% endblock %}
