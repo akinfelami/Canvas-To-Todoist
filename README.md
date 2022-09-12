@@ -1,14 +1,8 @@
-# Canvas To Todoist
+# Canvas-To-Todoist
 
-## Table of Contents
+## About 
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Usage](#usage)
-
-## About <a name = "about"></a>
-
-A Python script to export Canvas assignments to projects in Todoist.
+A Python app to export Canvas assignments to projects in Todoist.
 
 ## Getting Started <a name = "getting_started"></a>
 ### Prerequisites
@@ -27,33 +21,17 @@ Get your Todoist API key
 2. Go to Settings->Integrations
 3. Copy your API key located at the bottom.
 ```
+See : https://canvas2todoist.herokuapp.com
+## Run Locally <a name = "Run Locally"></a>
 
-### Installing
-
-Clone the repo with
-```
-git clone https://github.com/ZachJBurns/CanvasToTodoist
-```
+Clone the repo
 
 Install the required modules
 ```
 pip3 install -r requirements.txt
 ```
-
-## Usage <a name = "usage"></a>
-
-Import the classes you would like to track by running
 ```
-python3 import_classes.py
-```
-You will be asked to enter your api keys and the courses you want to track
-
-Import the assignments to Todoist by running
-```
-python3 import_tasks.py
+export FLASK_APP=server.py
+flask run
 ```
 
-At any point if you want to reset what courses are having assignments tracked you can run
-```
-python3 import_classes.py -r
-```
