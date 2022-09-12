@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <p class="text-primary">Check the courses you want to sync</p>
+    
+    <form action="/tasks/sync" method="POST">
+        {% for course in courses %}
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id={{course}} name="{{course[0]}}">
+            <label class="form-check-label" for={{course}}>{{course[1]}}</label>
+            
+          </div>
+          {% endfor %}
+          
+          <button type="submit" class="btn btn-primary">Sync</button>
+    </form>
+
+{% endblock %}

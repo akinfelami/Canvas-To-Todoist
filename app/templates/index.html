@@ -1,13 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas-To-Todoist</title>
-</head>
-<body>
-    <h1>Server is live babay!</h1>
-    
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        div#loading {
+    width: 35px;
+    height: 35px;
+    display: none;
+    background: url(/static/loadingimage.gif) no-repeat;
+    cursor: wait;
+    }
+    </style>
+    <div class="container">
+        <p><u>Steps to use</u></p>
+        <ul>
+            <li class="fw-bold text-primary">Generate a Canvas API key</li>
+            <ul>
+                <li>Log into your institutions canvas portal</li>
+                <li>Navigate to Account -> Settings</li>
+                <li>Scroll down to approved Integrations and generate a new access token</li>
+                <li>Copy your access token</li>
+            </ul>
+            <li class="fw-bold text-primary">Generate a Todoist API Key</li>
+            <ul>
+                <li>Log in your Todoist account</li>
+                <li>Go to Settings -> Integrations</li>
+                <li>Copy your API key located at the bottom</li>
+            </ul>
+        </ul>
+        
+    </div>
+
+
+    <div class="container">
+    <p class="text-warning">WARNING: Your API Keys are private and should be kept safely</p>
+    <form action="/tasks" method="POST">
+        <div class="mb-3">
+            <label for="canvas" class="form-label">Canvas Access Token</label>
+            <input type="password" id="canvas" name="canvaskey" class="form-control w-50" aria-describedby="keyhelp"/>
+            <div id="keyhelp" class="form-text">We'll never store nor share your api keys with anyone else</div>
+        </div>
+        <div class="mb-3">
+            <label for="todo" class="form-label">Todoist API key</label>
+            <input type="password" class="form-control w-50" name="todoistkey" id="todo" aria-describedby="keyhelp"/>
+            <div id="keyhelp" class="form-text">We'll never store nor share your api keys with anyone else</div>
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="loading();">Fetch courses</button>
+      
+    </form>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+            $("#content").hide();       
+        }
+// ]]></script>
+ 
+
+  
+{% endblock %}
