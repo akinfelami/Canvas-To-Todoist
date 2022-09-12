@@ -21,6 +21,8 @@ def user_index():
     if request.method == 'GET':
         return redirect('/')
     else:
+        if not request.form['canvaskey'] and not request.form['todoistkey']:
+            return redirect('/')
         course_names = []
         canvaskey = request.form['canvaskey']
         todoistkey = request.form['todoistkey']
@@ -46,9 +48,9 @@ def sync_tasks():
     
     for key in request.form:
         course_ids.append(key)
-    
-    print(course_ids)
 
+    if len(course_ids)==0:
+        return redirect('/')
     try:
         result = assignments(canvaskey, todoistkey, course_ids)
     except Exception as e:

@@ -7,9 +7,6 @@ from functions.canvas import Canvas
 
 
 
-
-
-
 class Class:
     def __init__(self, courseName="", courseID="", projID = "1234567890"):
         self.name = courseName
