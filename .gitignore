@@ -1,4 +1,4 @@
 .env
-/virtualenv
+virtualenv
 __pycache__
 /migrations
