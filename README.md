@@ -21,7 +21,8 @@ Get your Todoist API key
 2. Go to Settings->Integrations
 3. Copy your API key located at the bottom.
 ```
-See : https://canvas2todoist.herokuapp.com
+#### Heroku recently canceled it's free Dynos so application may be down. Applying for student credits as soon as possible
+See : https://canvas2todoist.herokuapp.com 
 ## Run Locally <a name = "Run Locally"></a>
 
 Clone the repo
